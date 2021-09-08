@@ -70,8 +70,8 @@ class RunConfig:
         },
     ]
 
-    # 发送邮箱
+    # 发送邮箱、密码
     from_email = ['niejun@xlyhw.com', 'Gyy2018']
 
-    # 接收邮箱
+    # 接收邮箱列表
     to_email = ['niejun@xlyhw.com']

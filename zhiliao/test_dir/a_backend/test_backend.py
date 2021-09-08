@@ -7,7 +7,7 @@ import pytest
 import time
 
 
-@pytest.mark.skip()
+# @pytest.mark.skip()
 class TestBackend:
 
     def test_login(self, browser, base_url, back_account):

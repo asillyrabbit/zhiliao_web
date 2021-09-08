@@ -128,7 +128,7 @@ class AuxiliaryTool:
 
         # 创建一个带附件的实例
         message = MIMEMultipart()
-        message['From'] = Header("Tester", 'utf-8')
+        message['From'] = Header("知了有方测试团队", 'utf-8')
         subject = '知了Web UI自动化测试报告'
         message['Subject'] = Header(subject, 'utf-8')
 

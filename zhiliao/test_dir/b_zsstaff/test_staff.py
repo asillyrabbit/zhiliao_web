@@ -7,7 +7,7 @@ import random
 from zhiliao.test_dir.b_zsstaff.conftest import pat_info
 
 
-@pytest.mark.skip()
+# @pytest.mark.skip()
 class TestStaff:
 
     def test_login(self, browser, base_url, staff_account):

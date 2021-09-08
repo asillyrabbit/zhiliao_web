@@ -39,7 +39,7 @@ def random_mobile():
 
 
 def random_name():
-    baijiaxing = '赵钱孙李周吴郑王冯陈褚卫蒋沈韩杨朱秦尤许何吕施张孔曹严华金魏陶姜戚谢邹喻柏水窦章云苏潘葛奚范彭郎'
+    baijiaxing = '赵钱李周吴郑王冯陈褚卫蒋沈韩杨朱秦尤许何吕施张孔曹严华金魏陶姜戚谢邹喻柏水窦章云苏潘葛奚范彭郎'
     shuzi = '一二三五六七八九十'
     xing = baijiaxing[random.randint(0, len(baijiaxing) - 1)]
     ming = shuzi[random.randint(0, len(shuzi) - 1)]
