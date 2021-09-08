@@ -126,6 +126,9 @@ class AuxiliaryTool:
         # 失败用例相关信息
         failed_case = self.failed_case()
 
+        if failed_case[1] == [] and failed_case[2] == []:
+            return "没有失败用例，直接返回！"
+
         # 创建一个带附件的实例
         message = MIMEMultipart()
         message['From'] = Header("知了有方测试团队", 'utf-8')
@@ -172,3 +175,7 @@ class AuxiliaryTool:
         """
         file_name = 'test_staff.py_TestStaff_test_register[新号+新患者+身份证+男+异常].png].png'
         print(file_name.encode('utf-8').decode('iso-8859-1'))
+
+
+
+
