@@ -15,17 +15,30 @@ REPORT_DIR = BASE_DIR + "/test_report/"
 # 定义基本测试环境
 @pytest.fixture(scope='function')
 def base_url():
-    return RunConfig.urls
+    if RunConfig.flag == 0:
+        urls = RunConfig.urls[0:2]
+        print(urls)
+    else:
+        urls = RunConfig.urls[2:4]
+    return urls
 
 
 @pytest.fixture(scope='function')
 def doc_info():
-    return RunConfig.doc_info
+    if RunConfig.flag == 0:
+        doc_info = RunConfig.doc_info[0]
+    else:
+        doc_info = RunConfig.doc_info[1]
+    return doc_info
 
 
 @pytest.fixture(scope='function')
 def clinic_info():
-    return RunConfig.clinic_info
+    if RunConfig.flag == 0:
+        clinic_info = RunConfig.clinic_info[0]
+    else:
+        clinic_info = RunConfig.clinic_info[1]
+    return clinic_info
 
 
 # 设置用例描述表头

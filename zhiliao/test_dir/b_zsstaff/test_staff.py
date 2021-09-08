@@ -6,6 +6,7 @@ import random
 
 from zhiliao.test_dir.b_zsstaff.conftest import pat_info
 
+
 @pytest.mark.skip()
 class TestStaff:
 
@@ -20,12 +21,10 @@ class TestStaff:
         page = StaffPage(browser)
         page.get(base_url[1])
 
-        # 诊室登录页有个bug，新打开的页面，第一次提交无法登录，需要登录两次
-        for i in range(0, 2):
-            page.login_id.click()
-            page.username.send_keys(staff_account['username'])
-            page.password.send_keys(staff_account['password'])
-            page.login_btn.click()
+        page.login_id.click()
+        page.username.send_keys(staff_account['username'])
+        page.password.send_keys(staff_account['password'])
+        page.login_btn.click()
 
         assert page.register_menu
 

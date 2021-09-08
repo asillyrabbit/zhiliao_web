@@ -1,5 +1,15 @@
-from PIL import Image
 import tesserocr
+import smtplib
+import os
+import time
+import send2trash
+import bs4
+from PIL import Image
+from zhiliao.conftest import REPORT_DIR
+from email.mime.text import MIMEText
+from email.header import Header
+from email.mime.multipart import MIMEMultipart
+from email.mime.image import MIMEImage
 
 
 # 辅助工具
@@ -11,15 +21,15 @@ class AuxiliaryTool:
         1.target_url(被测页面)、cookies，需根据实际情况修改。
         """
         PageObejct = page_object
-        target_url = "http://zhenshi.testing.xlyhw.com/drugdoc/drug?patientid=2880661&order_no=2109033783490817"
+        target_url = "https://manage.xlyhw.cn/"
         cookies = [
             {
-                'name': '_csrf',
-                'value': '10eb4010417b12933fa0fa2a2933833529a3623dcebcc9eeaf8681d5fd5c4801a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22w%DCfc%EFc%3A%1F%82VL%E0k%3A%5C%95%80%CEF%97%D5%C72z%28%21j%F4%94%F2N%C9%22%3B%7D'
+                'name': '_csrf_backend',
+                'value': '2791350f00b0190fcdf1a4df97a10d346a4a9d6131a6d673a32920358951a0e1a%3A2%3A%7Bi%3A0%3Bs%3A13%3A%22_csrf_backend%22%3Bi%3A1%3Bs%3A32%3A%22S7VIGut0x5TL1Hv8KfVjhO-18mAFyjDY%22%3B%7D'
             },
             {
                 'name': 'PHPSESSID',
-                'value': '61317eb3b42d5'
+                'value': 'os8cu1pka4jsc2e1892sl4v4l3'
             }
         ]
 
@@ -62,3 +72,103 @@ class AuxiliaryTool:
         captcha = tesserocr.image_to_text(image).strip()
 
         return captcha
+
+    def delete_report(self):
+        """
+        删除测试报告文件夹
+        """
+        os.chdir(REPORT_DIR)
+        now_year = time.strftime("%Y")
+
+        for file in os.listdir():
+            if file.startswith(now_year):
+                send2trash.send2trash(file)
+
+    def failed_case(self):
+        """
+        返回日报路径、失败用例名、失败截图名
+        """
+        os.chdir(REPORT_DIR)
+        now_year = time.strftime("%Y")
+
+        file_dir = ''
+        for file in os.listdir():
+            if file.startswith(now_year):
+                file_dir = file
+                os.chdir(file_dir)
+
+        report_file = open('report.html', encoding='utf-8')
+        report_soup = bs4.BeautifulSoup(report_file, "html.parser")
+        failed_rows = report_soup.select('#results-table .failed')
+
+        failed_case = []
+        failed_img = []
+        for failed_row in failed_rows:
+            col_name = failed_row.select('.col-name')
+            img = failed_row.select('img')
+            image_name = str(img[0].get('src'))
+
+            case_name = str(col_name[0].text)
+
+            if '异常' in case_name:
+                continue
+            else:
+                failed_case.append(case_name)
+                failed_img.append(image_name)
+
+        return file_dir, failed_case, failed_img
+
+    def send_email(self, from_email, to_emails):
+        """
+        发送邮件，正文内容：失败用例名+失败用例截图
+        """
+
+        # 失败用例相关信息
+        failed_case = self.failed_case()
+
+        # 创建一个带附件的实例
+        message = MIMEMultipart()
+        message['From'] = Header("Tester", 'utf-8')
+        subject = '知了Web UI自动化测试报告'
+        message['Subject'] = Header(subject, 'utf-8')
+
+        # 邮件正文内容
+        content = f'<h3>失败用例：</h3>'
+        for name in failed_case[1]:
+            name = f'<p>{name}</p>'
+            content = content + name
+
+        body_msg = f'<div>{content} <img src="cid:image"/></div>'
+
+        os.chdir(REPORT_DIR)
+
+        for img in failed_case[2]:
+            img_data = open(failed_case[0] + '/' + img, 'rb').read()
+            html_part = MIMEMultipart(_subtype='related')
+            body = MIMEText(body_msg, _subtype='html')
+            html_part.attach(body)
+
+            msg_img = MIMEImage(img_data, 'png')
+            msg_img.add_header('Content-Id', '<image>')
+            msg_img.add_header('Content-Disposition', 'inline', filename=('utf-8', '', img))
+            html_part.attach(msg_img)
+            message.attach(html_part)
+
+        # 连接到SMTP服务器
+        smtpObj = smtplib.SMTP_SSL('smtp.exmail.qq.com', 465)
+
+        # 登录发送邮箱
+        smtpObj.login(from_email[0], from_email[1])
+
+        # 发送
+        smtpObj.sendmail(from_email[0], to_emails, message.as_string())
+
+        # 从SMTP服务器断开
+        smtpObj.quit()
+
+    def bak(self):
+        """
+        用例名中文乱码时，解码方法
+        """
+        file_name = 'test_staff.py_TestStaff_test_register[新号+新患者+身份证+男+异常].png].png'
+        print(file_name.encode('utf-8').decode('iso-8859-1'))

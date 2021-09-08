@@ -1,13 +1,13 @@
 # 药房信息，每次生成用例前，根据实际情况修改
 supplier_infos_1 = {
     "type": "中药饮片",
-    "sup_name": "国药江康【江苏】",
-    "details": {"枸杞子": 15, "夏枯草": 15, "菊花": 20},
+    "sup_name": "寿南山【海南】",
+    "details": {"菟丝子": 15, "姜天麻": 10, "生薏苡仁": 20},
     "total": ['7'],
     "sign": ['1', '2', '3', '4'],
     "brew": ['100 ml/袋', '200 ml/袋'],
     "method": [0, 1],
-    "flag": [0, 1]
+    "flag": [0]
 }
 
 supplier_infos_2 = {
@@ -29,7 +29,7 @@ def create_case(supplier_infos):
     case_list = []
     type = supplier_infos['type']
     sup_name = supplier_infos['sup_name']
-    title = "真爱门诊，颗粒"  # 需根据实际情况进行修改
+    title = "寿南山，饮片"  # 需根据实际情况进行修改
     i = 1
 
     if type == "中药饮片":
@@ -78,6 +78,6 @@ def create_case(supplier_infos):
     return case_list
 
 
-case = create_case(supplier_infos_2)
+case = create_case(supplier_infos_1)
 
 print(case)

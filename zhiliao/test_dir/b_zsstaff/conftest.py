@@ -1,20 +1,29 @@
+from zhiliao.config import RunConfig
 import pytest
 import random
 import time
 
-
 # Start------>员工端登录：账号/密码 ------
 # 登录用户名/密码
-s_account = {
-    'username': '',
-    'password': ''
-}
+s_account = [
+    {
+        'username': 'shengjiang3',
+        'password': '123456'
+    },
+    {
+        'username': 'shengjiang',
+        'password': '123456'
+    }
+]
 
 
 # 员工端登录用户名/密码
 @pytest.fixture(scope='function')
 def staff_account():
-    return s_account
+    if RunConfig.flag == 0:
+        return s_account[0]
+    else:
+        return s_account[1]
 
 
 # End------>员工端登录：账号/密码 ------
@@ -42,7 +51,7 @@ def random_name():
 # 患者信息
 pat_info = [
     {
-        'title': '新号+新患者+身份证+男',
+        'title': '新号+新患者+身份证+男+异常',
         'p_type': 'new',
         'mobile': random_mobile(),
         'name': random_name(),

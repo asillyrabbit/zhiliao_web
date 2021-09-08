@@ -2,8 +2,10 @@ from zhiliao.page.backend_page import BackendPage
 from zhiliao.auxiliary_tool import AuxiliaryTool
 from selenium.webdriver.support.select import Select
 from selenium.webdriver import ActionChains
+from selenium.common.exceptions import UnexpectedAlertPresentException
 import pytest
 import time
+
 
 @pytest.mark.skip()
 class TestBackend:
@@ -43,6 +45,22 @@ class TestBackend:
 
         assert browser.title == "后台管理"
 
+    def scroll_bar(self, browser, y_pos):
+        """
+        公共方法：滑动菜单栏左侧滚动条
+        """
+        slider = browser.find_elements_by_class_name("slimScrollBar")[0]
+        action = ActionChains(browser)
+        action.click_and_hold(slider).perform()
+
+        for index in range(2):
+            try:
+                action.move_by_offset(0, y_pos).perform()
+            except UnexpectedAlertPresentException:
+                break
+            action.reset_actions()
+            time.sleep(0.1)
+
     def test_search_scheduling(self, browser, doc_info):
         """
         医生排班查询：
@@ -53,6 +71,10 @@ class TestBackend:
         5.验证查询结果。
         """
         global yy_count
+
+        # 滑动菜单栏滚动条
+        self.scroll_bar(browser, 60)
+
         page.zl_zhenshi.click()
         page.chuzhe_doc.click()
 
@@ -117,10 +139,17 @@ class TestBackend:
             page.yy_doc.send_keys(doc_info['mobile'])
             page.temp_name.click()
             page.submits.click()
+            time.sleep(1)
+
+            # 查询验证结果
+            page.yy_doc_moblie.send_keys(doc_info['mobile'])
+            page.zs_sh_button.click()
+            time.sleep(1)
 
             assert browser.find_element_by_xpath('//table/tbody/tr[1]/td[8]').text == '正常'
 
-    def test_logout(self, browser,base_url):
+
+    def test_logout(self, browser, base_url):
         """
         退出系统
         """

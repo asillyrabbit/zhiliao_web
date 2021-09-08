@@ -17,4 +17,4 @@ basic_infos = [
 ]
 
 # 测试用例
-drug_infos = yin_pian.zhen_ai_men_zhen + ke_li.zhen_ai_men_zhen
+drug_infos = yin_pian.shou_nan_shan

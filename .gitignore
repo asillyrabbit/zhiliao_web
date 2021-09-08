@@ -1,5 +1,6 @@
 zl_env/
 .pytest_cache/
 .idea/
-temp
 __pycache__/
+conftest.py
+config.py

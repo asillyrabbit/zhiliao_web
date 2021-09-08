@@ -27,7 +27,6 @@ class DoctorPage(Page):
     drug_selects = Elements(xpath='//*[@class="reception_basic_topinforbox"]/div[1]/div[2]/select', describe='剂型选择下拉框')
     change_confirm = Element(xpath='//*[@id="content"]/div[3]/div[2]/div[3]/div[2]/a', describe='变更剂型确定按钮')
     sup_selects = Elements(xpath='//*[@class="form_select supplierSelect"]', describe='药房选择下拉框')
-    sup_sel_opts = Elements(xpath='//*[@class="form_select supplierSelect"]/option', describe='药房选择下拉框选项')
 
     input_drug_names = Elements(xpath='//*[@class="edit_input_box addDrug"]/div/div[1]/input', describe='药品输入框')
     sel_drugs = Elements(xpath='//*[@class="edit_input_box addDrug"]/div/div[2]/a', describe='选择第一个检索出来的药')

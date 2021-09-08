@@ -9,8 +9,9 @@ import random
 from zhiliao.test_dir.c_zsdoc.conftest import drug_infos, basic_infos
 
 
+# @pytest.mark.skip()
 class TestDoctor:
-    # @pytest.mark.skip()
+
     def test_login(self, browser, base_url, doc_info):
         """
         1.选择密码登录方式。
@@ -78,16 +79,7 @@ class TestDoctor:
         sup_name = drug_infos['sup_name']
         sup_selects = page.sup_selects
         sup_select = sup_selects[1]
-        sup_sel_opts = page.sup_sel_opts
-        sup_sel_opts = sup_sel_opts[3:]
-        sup_list = []
-        for sup_sel_opt in sup_sel_opts:
-            sup_list.append(sup_sel_opt.text)
-
-        if sup_name in sup_list:
-            Select(sup_select).select_by_visible_text(sup_name)
-        else:
-            Select(sup_select).select_by_visible_text(sup_list[random.randint(0, len(sup_list) - 1)])
+        Select(sup_select).select_by_visible_text(sup_name)
 
     def add_drugs(self, page, browser, drug_infos):
         """

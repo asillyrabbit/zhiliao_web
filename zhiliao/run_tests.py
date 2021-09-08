@@ -6,6 +6,7 @@ import pytest
 import click
 from zhiliao.conftest import REPORT_DIR
 from zhiliao.config import RunConfig
+from zhiliao.auxiliary_tool import AuxiliaryTool
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -25,7 +26,6 @@ def init_env(new_report):
     """
     os.mkdir(new_report)
     os.mkdir(new_report + "/image")
-    
 
 
 @click.command()
@@ -53,4 +53,9 @@ def run(m):
 
 
 if __name__ == '__main__':
+    # 删除上一次的报告
+    AuxiliaryTool().delete_report()
+    # 执行本次测试
     run()
+    # 如果有失败用例则发送邮件
+    AuxiliaryTool().send_email(RunConfig.from_email, RunConfig.to_email)
