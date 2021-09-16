@@ -26,7 +26,7 @@ class RunConfig:
     ]
 
     # 失败重跑次数
-    rerun = "0"
+    rerun = "1"
 
     # 当达到最大失败数，停止执行
     max_fail = "5"
